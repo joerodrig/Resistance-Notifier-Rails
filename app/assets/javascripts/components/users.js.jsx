@@ -2,17 +2,18 @@
 class Group extends React.Component {
   constructor(props){
     super(props);
-    this.state = {}
+    this.state               = {}
     this.state.selectedUsers = []
-    this.state.spies = 0
-    this.state.resistance = 0
+    this.state.spies         = 0
+    this.state.resistance    = 0
+    this.state.debug         = false
   }
 
   // When a user is selected, add them to
   // selected users, else remove them
   updateSelectedUsers(user) {
-    let userId = user.target.value;
-    let users = this.state.selectedUsers;
+    let userId  = user.target.value;
+    let users   = this.state.selectedUsers;
     let userIdx = users.indexOf(userId);
     (userIdx !== -1)? users.splice(userIdx, 1) : users.push(userId)
 
@@ -22,7 +23,7 @@ class Group extends React.Component {
 
   // Display selectable users within the group
   users(){
-    return this.props.users.map((user, idx) =>{
+    return this.props.users.map((user, idx) => {
       return (<li>
                <input
                  type="checkbox"
@@ -30,6 +31,10 @@ class Group extends React.Component {
                  onChange={(user) => this.updateSelectedUsers(user)}/> {user.name}
               </li>)
     });
+  }
+
+  setDebug(e){
+    this.setState({debug: e.target.checked})
   }
 
   // Calculating roles on the client
@@ -60,16 +65,20 @@ class Group extends React.Component {
 
   // Submit selected players to server to send them their roles
   submitPlayers() {
-    let users = this.state.selectedUsers;
+    let users          = this.state.selectedUsers;
+    let numSpies       = this.state.spies;
+    let numResistance  = this.state.resistance;
+    let debugMode      = this.state.debug;
+    let group          = this.props.group;
+
     $.ajax({
-      data: {users: users},
-      url: './1/submit',
+      data: { users: users, spies: numSpies, resistance: numResistance, debug: debugMode },
+      url:  './'+group+'/submit',
       type: "POST",
-      success: function ( data ) {
+      success: function( data ) {
         console.log("successfully submitted");
       }.bind(this)
     });
-    console.log("submitting players");
   }
 
   render() {
@@ -79,6 +88,9 @@ class Group extends React.Component {
         <h1><span>Spies: {this.state.spies}</span> <span>Resistance: {this.state.resistance}</span></h1>
         <h1>Select Players:</h1>
         <ul>{this.users()}</ul>
+        <div><input
+               type="checkbox"
+               onChange={this.setDebug.bind(this)}/> Debug </div>
         <button type="submit" onClick={this.submitPlayers.bind(this)}> Start Game</button>
       </div>
     )
