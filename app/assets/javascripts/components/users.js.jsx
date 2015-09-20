@@ -58,6 +58,20 @@ class Group extends React.Component {
     }
   }
 
+  // Submit selected players to server to send them their roles
+  submitPlayers() {
+    let users = this.state.selectedUsers;
+    $.ajax({
+      data: {users: users},
+      url: './1/submit',
+      type: "POST",
+      success: function ( data ) {
+        console.log("successfully submitted");
+      }.bind(this)
+    });
+    console.log("submitting players");
+  }
+
   render() {
     return (
       <div>
@@ -65,7 +79,7 @@ class Group extends React.Component {
         <h1><span>Spies: {this.state.spies}</span> <span>Resistance: {this.state.resistance}</span></h1>
         <h1>Select Players:</h1>
         <ul>{this.users()}</ul>
-        <button type="submit"> Start Game</button>
+        <button type="submit" onClick={this.submitPlayers.bind(this)}> Start Game</button>
       </div>
     )
   }

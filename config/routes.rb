@@ -10,6 +10,7 @@ Rails.application.routes.draw do
    root 'pages#index'
 
    get 'groups/:id' => 'groups#show'
+   post 'groups/:id/submit' => 'groups#message'
 
   # Example of named route that can be invoked with purchase_url(id: product.id)
   #   get 'products/:id/purchase' => 'catalog#purchase', as: :purchase
