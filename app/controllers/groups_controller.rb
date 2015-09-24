@@ -32,6 +32,9 @@ class GroupsController < ApplicationController
       # Shuffle roles
       roles = roles.shuffle
 
+      # Shuffle users
+      params[:users] = params[:users].shuffle
+
       params[:users].each do |userId|
 
         # Retrieve their phone number and text the user their role
