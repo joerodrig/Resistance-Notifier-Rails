@@ -54,4 +54,12 @@ class GroupsController < ApplicationController
 
     redirect_to :back
   end
+
+  def new
+    group_params = Rack::Utils.parse_nested_query params[:group]
+    @group = Group.new(group_params)
+    @group.save!
+    redirect_to @group
+  end
+
 end
