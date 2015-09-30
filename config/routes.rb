@@ -9,4 +9,9 @@ Rails.application.routes.draw do
     end
   end
 
+  resources :users do
+    collection do
+      get '/new' => 'users#new'
+    end
+  end
 end
