@@ -9,13 +9,6 @@ class GroupsController < ApplicationController
 
   def message
 
-    #Twilio stuff
-    account_sid = ENV['twilio_account_sid']
-    auth_token  = ENV['twilio_auth_token']
-    twilio_num  = ENV['twilio_num']
-    binding.pry
-    @client = Twilio::REST::Client.new account_sid, auth_token
-
     spies      = params[:spies].to_i
     resistance = params[:resistance].to_i
     roles      = []
@@ -43,9 +36,10 @@ class GroupsController < ApplicationController
         if (params[:debug] == "true")
           puts "Texting #{user[:name]} at num:#{user[:phone_number]} their role as #{roles.first}"
         else
-          # @client.account.messages.create(:body => roles.first,
-          #   :to => user[:phone_number],
-          #   :from => twilio_num )
+          @client = Twilio::REST::Client.new(ENV['twilio_account_sid'], ENV['twilio_auth_token'])
+          @client.account.messages.create(:body => roles.first,
+            :to => user[:phone_number],
+            :from => ENV['twilio_num'] )
         end
 
         # Delete the role from the array
