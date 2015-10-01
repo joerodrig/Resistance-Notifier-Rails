@@ -12,6 +12,7 @@ class GroupsController < ApplicationController
     spies      = params[:spies].to_i
     resistance = params[:resistance].to_i
     roles      = []
+    players    = []
 
     if (spies != 0 && resistance != 0)
 
@@ -35,6 +36,7 @@ class GroupsController < ApplicationController
         user = User.find(userId)
         if (params[:debug] == "true")
           puts "Texting #{user[:name]} at num:#{user[:phone_number]} their role as #{roles.first}"
+          players.push(user[:name])
         else
           @client = Twilio::REST::Client.new(ENV['twilio_account_sid'], ENV['twilio_auth_token'])
           @client.account.messages.create(:body => roles.first,
@@ -46,6 +48,23 @@ class GroupsController < ApplicationController
         roles.shift
       end
     end
+
+    data = {"channel":    "#the-resistance",
+            "username":   "Merlin",
+            "text":       "Starting game with players: #{players.join(',')}",
+            "icon_emoji": ":spy:"
+           }
+
+    # Convert hash to string
+    data = "payload={"+data.collect { |k, v| "\"#{k}\": \"#{v}\"," }.join + "}"
+
+    # Delete extra comma..
+    data[data.length-2] = ""
+
+    slack_token = ENV["slack_incoming_hook_token"]
+    slackURL = 'https://hooks.slack.com/services/' + slack_token
+
+    Curl.post(slackURL, data)
 
     redirect_to :back
   end

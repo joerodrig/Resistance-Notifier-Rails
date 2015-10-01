@@ -8,6 +8,8 @@ gem 'pg'
 
 #.env
 gem 'dotenv-rails', :groups => [:development, :test]
+#cURL api
+gem 'curb'
 # Use SCSS for stylesheets
 gem 'sass-rails', '~> 5.0'
 # Use Uglifier as compressor for JavaScript assets
