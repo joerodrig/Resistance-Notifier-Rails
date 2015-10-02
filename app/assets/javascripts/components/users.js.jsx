@@ -34,7 +34,11 @@ class Group extends React.Component {
   }
 
   setDebug(e){
-    this.setState({debug: e.target.checked})
+    this.setState({debug: e.target.checked});
+  }
+
+  setMessagingOption(e){
+    this.setState({messageType: e.target.value});
   }
 
   // Calculating roles on the client
@@ -69,10 +73,11 @@ class Group extends React.Component {
     let numSpies       = this.state.spies;
     let numResistance  = this.state.resistance;
     let debugMode      = this.state.debug;
+    let messageType    = this.state.messageType;
     let group          = this.props.group;
 
     $.ajax({
-      data: { users: users, spies: numSpies, resistance: numResistance, debug: debugMode },
+      data: { users: users, spies: numSpies, resistance: numResistance, debug: debugMode, message_type: messageType },
       url:  './'+group+'/submit',
       type: "POST",
       success: function( data ) {
@@ -88,9 +93,16 @@ class Group extends React.Component {
         <h1><span>Spies: {this.state.spies}</span> <span>Resistance: {this.state.resistance}</span></h1>
         <h1>Select Players:</h1>
         <ul>{this.users()}</ul>
-        <div><input
-               type="checkbox"
-               onChange={this.setDebug.bind(this)}/> Debug </div>
+        <div>
+          <input
+             type="checkbox"
+             onChange={this.setDebug.bind(this)} /> Debug
+
+           <form onChange={this.setMessagingOption.bind(this)}>
+            <input type="radio" name="notification-option" value="slack" /> Slack
+            <input type="radio" name="notification-option" value="text_message" /> Texting
+          </form>
+              </div>
         <button type="submit" onClick={this.submitPlayers.bind(this)}> Start Game</button>
       </div>
     )

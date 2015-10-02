@@ -8,16 +8,15 @@ class GroupsController < ApplicationController
   end
 
   def message
-
     spies      = params[:spies].to_i
     resistance = params[:resistance].to_i
     roles      = []
     players    = []
 
-    if (spies != 0 && resistance != 0)
+    if (spies + resistance > 0)
 
       # Add all roles to an array
-      for spy in 0..(spies-1)
+      for i in 0..(spies-1)
         roles.push("Spy")
       end
       for resistance in 0..(resistance-1)
@@ -32,16 +31,13 @@ class GroupsController < ApplicationController
 
       params[:users].each do |userId|
 
-        # Retrieve their phone number and text the user their role
+        # Retrieve user profile and message based off params
         user = User.find(userId)
-        if (params[:debug] == "true")
-          puts "Texting #{user[:name]} at num:#{user[:phone_number]} their role as #{roles.first}"
-          players.push(user[:name])
-        else
-          @client = Twilio::REST::Client.new(ENV['twilio_account_sid'], ENV['twilio_auth_token'])
-          @client.account.messages.create(:body => roles.first,
-            :to => user[:phone_number],
-            :from => ENV['twilio_num'] )
+        players.push(user[:name])
+        if (params[:message_type] == "text_message")
+          text_message(user, roles.first)
+        elsif (params[:message_type] == "slack")
+          slack_message(user, roles.first)
         end
 
         # Delete the role from the array
@@ -49,11 +45,30 @@ class GroupsController < ApplicationController
       end
     end
 
-    data = {"channel":    "#the-resistance",
-            "username":   "Merlin",
-            "text":       "Starting game with players: #{players.join(',')}",
-            "icon_emoji": ":spy:"
+    data = {
+            "channel"   => "#the-resistance",
+            "username"  => "Merlin",
+            "text"      => "Starting game with players: #{players.join(',')}",
+            "icon_emoji"=> ":spy:"
            }
+
+    slack_post(data)
+
+    redirect_to :back
+  end
+
+  def slack_message(user,role)
+    data = {
+            "channel"=>    "@#{user[:slack_name]}",
+            "username"=>   "Merlin",
+            "text"=>       "#{role}",
+            "icon_emoji"=> ":spy:"
+           }
+
+    slack_post(data)
+  end
+
+  def slack_post(data)
 
     # Convert hash to string
     data = "payload={"+data.collect { |k, v| "\"#{k}\": \"#{v}\"," }.join + "}"
@@ -62,11 +77,18 @@ class GroupsController < ApplicationController
     data[data.length-2] = ""
 
     slack_token = ENV["slack_incoming_hook_token"]
-    slackURL = 'https://hooks.slack.com/services/' + slack_token
+    slackURL    = 'https://hooks.slack.com/services/' + slack_token
 
     Curl.post(slackURL, data)
+  end
 
-    redirect_to :back
+  def text_message(user, role)
+    @client = Twilio::REST::Client.new(ENV['twilio_account_sid'], ENV['twilio_auth_token'])
+    @client.account.messages.create(
+      :body => role,
+      :to   => user[:phone_number],
+      :from => ENV['twilio_num']
+    )
   end
 
   def new
