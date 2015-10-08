@@ -48,7 +48,7 @@ class GroupsController < ApplicationController
               "channel"   => "#the-resistance",
               "username"  => "Merlin",
               "text"      => "Starting game with players: #{players.join(',')}",
-              "icon_emoji"=> ":spy:"
+              "icon_emoji"=> ":ben:"
              }
 
       slack_post(data)
@@ -62,7 +62,7 @@ class GroupsController < ApplicationController
             "channel"=>    "@#{user[:slack_name]}",
             "username"=>   "Merlin",
             "text"=>       "#{role}",
-            "icon_emoji"=> ":spy:"
+            "icon_emoji"=> ":#{role.downcase}:"
            }
 
     slack_post(data)

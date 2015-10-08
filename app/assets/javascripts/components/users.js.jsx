@@ -69,7 +69,7 @@ class Group extends React.Component {
       users:         this.state.selectedUsers,
       spies:         this.state.spies,
       resistance:    this.state.resistance,
-      messageType:   this.state.messageType,
+      message_type:   this.state.messageType,
       group:         this.props.group,
     };
 
