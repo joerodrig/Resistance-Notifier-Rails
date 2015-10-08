@@ -6,7 +6,6 @@ class Group extends React.Component {
     this.state.selectedUsers = []
     this.state.spies         = 0
     this.state.resistance    = 0
-    this.state.debug         = false
   }
 
   // When a user is selected, add them to
@@ -31,10 +30,6 @@ class Group extends React.Component {
                  onChange={(user) => this.updateSelectedUsers(user)}/> {user.name}
               </li>)
     });
-  }
-
-  setDebug(e){
-    this.setState({debug: e.target.checked});
   }
 
   setMessagingOption(e){
@@ -69,16 +64,19 @@ class Group extends React.Component {
 
   // Submit selected players to server to send them their roles
   submitPlayers() {
-    let users          = this.state.selectedUsers;
-    let numSpies       = this.state.spies;
-    let numResistance  = this.state.resistance;
-    let debugMode      = this.state.debug;
-    let messageType    = this.state.messageType;
-    let group          = this.props.group;
+
+    let data = {
+      users:         this.state.selectedUsers,
+      numSpies:      this.state.spies,
+      numResistance: this.state.resistance,
+      debugMode:     this.state.debug,
+      messageType:   this.state.messageType,
+      group:         this.props.group,
+    };
 
     $.ajax({
-      data: { users: users, spies: numSpies, resistance: numResistance, debug: debugMode, message_type: messageType },
-      url:  './'+group+'/submit',
+      data: data,
+      url:  './'+data.group+'/submit',
       type: "POST",
       success: function( data ) {
         console.log("successfully submitted");
@@ -94,10 +92,6 @@ class Group extends React.Component {
         <h1>Select Players:</h1>
         <ul>{this.users()}</ul>
         <div>
-          <input
-             type="checkbox"
-             onChange={this.setDebug.bind(this)} /> Debug
-
            <form onChange={this.setMessagingOption.bind(this)}>
             <input type="radio" name="notification-option" value="slack" /> Slack
             <input type="radio" name="notification-option" value="text_message" /> Texting
