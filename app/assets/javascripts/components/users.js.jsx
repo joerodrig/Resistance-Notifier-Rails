@@ -64,7 +64,6 @@ class Group extends React.Component {
 
   // Submit selected players to server to send them their roles
   submitPlayers() {
-
     let data = {
       users:         this.state.selectedUsers,
       spies:         this.state.spies,
@@ -92,8 +91,14 @@ class Group extends React.Component {
         <ul>{this.users()}</ul>
         <div>
            <form onChange={this.setMessagingOption.bind(this)}>
-            <input type="radio" name="notification-option" value="slack" /> Slack
-            <input type="radio" name="notification-option" value="text_message" /> Texting
+            <label>
+              <input type="radio" name="notification-option" value="slack_message" />
+              Slack Message
+            </label>
+            <label>
+              <input type="radio" name="notification-option" value="text_message" />
+              Text Message
+            </label>
           </form>
               </div>
         <button type="submit" onClick={this.submitPlayers.bind(this)}> Start Game</button>
