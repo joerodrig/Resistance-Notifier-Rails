@@ -43,16 +43,16 @@ class GroupsController < ApplicationController
         # Delete the role from the array
         roles.shift
       end
+
+      data = {
+              "channel"   => "#the-resistance",
+              "username"  => "Merlin",
+              "text"      => "Starting game with players: #{players.join(',')}",
+              "icon_emoji"=> ":spy:"
+             }
+
+      slack_post(data)
     end
-
-    data = {
-            "channel"   => "#the-resistance",
-            "username"  => "Merlin",
-            "text"      => "Starting game with players: #{players.join(',')}",
-            "icon_emoji"=> ":spy:"
-           }
-
-    slack_post(data)
 
     redirect_to :back
   end
@@ -68,6 +68,7 @@ class GroupsController < ApplicationController
     slack_post(data)
   end
 
+  #TODO: Use ruby-slack-gem instead of curl to clean payload
   def slack_post(data)
 
     # Convert hash to string

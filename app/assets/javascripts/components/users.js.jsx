@@ -67,9 +67,8 @@ class Group extends React.Component {
 
     let data = {
       users:         this.state.selectedUsers,
-      numSpies:      this.state.spies,
-      numResistance: this.state.resistance,
-      debugMode:     this.state.debug,
+      spies:         this.state.spies,
+      resistance:    this.state.resistance,
       messageType:   this.state.messageType,
       group:         this.props.group,
     };
