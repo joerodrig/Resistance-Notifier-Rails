@@ -11,10 +11,3 @@
   <li> Save groups of players for resistance</li>
   <li> Auto-assign users roles via text message/slack</li>
 </ul>
-
-<h2> To do</h2>
-<ul>
-  <li> Add round/mission logging</li>
-  <li> Allow users to vote via slack </li>
-  <li> Export final game data to JSON <li>
-</ul>
