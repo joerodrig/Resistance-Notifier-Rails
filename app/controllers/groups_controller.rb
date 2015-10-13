@@ -10,7 +10,7 @@ class GroupsController < ApplicationController
   def message
     spies          = params[:spies].to_i
     resistance     = params[:resistance].to_i
-    roles, players          = [], []
+    roles, players = [], []
 
     if (spies + resistance) == params[:users].length
 
@@ -23,7 +23,6 @@ class GroupsController < ApplicationController
         # Retrieve user profile and message based off params
         user = User.find(id)
         players << user.name
-
         send(params_message_type, *[user, roles.shift])
       end
 
