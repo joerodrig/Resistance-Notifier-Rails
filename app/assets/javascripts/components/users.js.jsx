@@ -2,34 +2,17 @@
 class Group extends React.Component {
   constructor(props){
     super(props);
-    this.state               = {}
-    this.state.selectedUsers = []
-    this.state.spies         = 0
-    this.state.resistance    = 0
+    this.state               = {};
+    this.state.selectedUsers = [];
+    this.state.spies         = 0;
+    this.state.resistance    = 0;
   }
 
   // When a user is selected, add them to
   // selected users, else remove them
-  updateSelectedUsers(user) {
-    let userId  = user.target.value;
-    let users   = this.state.selectedUsers;
-    let userIdx = users.indexOf(userId);
-    (userIdx !== -1)? users.splice(userIdx, 1) : users.push(userId)
-
+  updateSelectedUsers(users) {
     this.setState({selectedUsers: users});
     this.calculateRoles(users);
-  }
-
-  // Display selectable users within the group
-  users(){
-    return this.props.users.map((user, idx) => {
-      return (<li>
-               <input
-                 type="checkbox"
-                 value={user.id}
-                 onChange={(user) => this.updateSelectedUsers(user)}/> {user.name}
-              </li>)
-    });
   }
 
   setMessagingOption(e){
@@ -68,7 +51,7 @@ class Group extends React.Component {
       users:         this.state.selectedUsers,
       spies:         this.state.spies,
       resistance:    this.state.resistance,
-      message_type:   this.state.messageType,
+      message_type:  this.state.messageType,
       group:         this.props.group,
     };
 
@@ -85,24 +68,118 @@ class Group extends React.Component {
   render() {
     return (
       <div>
-        <h1> # of players: {this.state.selectedUsers.length}</h1>
-        <h1><span>Spies: {this.state.spies}</span> <span>Resistance: {this.state.resistance}</span></h1>
-        <h1>Select Players:</h1>
-        <ul>{this.users()}</ul>
-        <div>
-           <form onChange={this.setMessagingOption.bind(this)}>
-            <label>
-              <input type="radio" name="notification-option" value="slack_message" />
-              Slack Message
-            </label>
-            <label>
-              <input type="radio" name="notification-option" value="text_message" />
-              Text Message
-            </label>
-          </form>
-              </div>
-        <button type="submit" onClick={this.submitPlayers.bind(this)}> Start Game</button>
+        <DetailCard count={this.state.selectedUsers.length}
+                    spies={this.state.spies}
+                    resistance={this.state.resistance}
+        />
+        <PlayerList users={this.props.users}
+                    selected={this.state.selectedUsers}
+                    update={e => this.updateSelectedUsers(e)} />
+        <MessageType messageType={e => this.setMessagingOption(e)} />
+        <button type="submit"
+                disabled={this.state.selectedUsers.length < 5}
+                onClick={e => this.submitPlayers(e)}> Start Game</button>
       </div>
     )
   }
+}
+
+
+class DetailCard extends React.Component {
+  constructor(props){
+    super(props);
+  }
+
+  render() {
+    return (
+      <div>
+        <h1> <u>{this.props.count}</u> players</h1>
+        <h1> <span><u>{this.props.spies}</u> Spies </span>
+             &nbsp;
+             <span><u>{this.props.resistance}</u> Resistance </span></h1>
+      </div>
+    )
+  }
+}
+
+DetailCard.propTypes = {
+  count:      React.PropTypes.number.isRequired,
+  spies:      React.PropTypes.number.isRequired,
+  resistance: React.PropTypes.number.isRequired
+}
+
+class PlayerList extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {};
+  }
+  // When a user is selected, add them to
+  // selected users, else remove them
+  selectUser(id) {
+    let users   = this.props.selected;
+    let userIdx = users.indexOf(id);
+    (userIdx !== -1)? users.splice(userIdx, 1) : users.push(id);
+
+    this.props.update(users);
+  }
+
+  // Display selectable users within the group
+  users(){
+    return this.props.users.map((user, idx) => {
+      return ( <PlayerListItem user={user} selectUser={id => this.selectUser(id)} />)
+    },this);
+  }
+
+  render() {
+    return(
+      <div>
+        <h1>Select Players:</h1>
+        <ul>{this.users()}</ul>
+      </div>
+    )
+  }
+}
+
+
+class PlayerListItem extends React.Component {
+  constructor(props){
+    super(props);
+  }
+
+  clicked(e){
+    this.props.selectUser(e.target.value);
+  }
+
+  render() {
+    return (
+      <label>
+        <input type="checkbox"
+               value={this.props.user.id}
+               onChange={(id) => this.clicked(id)} /> {this.props.user.name}
+      </label>
+    )
+  }
+}
+
+class MessageType extends React.Component {
+  constructor(props) {
+    super(props);
+  }
+
+  render() {
+    return (
+      <form onChange={e => this.props.messageType(e)}>
+       <label>
+         <input type="radio" name="notification-option" value="slack_message" /> Slack
+       </label>
+       <label>
+         <input type="radio" name="notification-option" value="text_message" /> Texting
+       </label>
+     </form>
+    )
+  }
+}
+
+MessageType.propTypes = {
+  messageType: React.PropTypes.func.isRequired
 }

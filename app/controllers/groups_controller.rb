@@ -42,12 +42,11 @@ class GroupsController < ApplicationController
 
   def slack_message(user, role)
     data = {
-            channel:      "@#{user.slack_name}",
-            username:     "Merlin",
-            text:         role,
-            icon_emoji:   ":#{role.downcase}:"
-           }
-
+      channel:    "@#{user.slack_name}",
+      username:   "Merlin",
+      text:       "@#{user[:slack_name]}:  #{role}",
+      icon_emoji: ":#{role.downcase}:"
+    }
     slack_post(data)
   end
 
