@@ -61,7 +61,7 @@ class GroupsController < ApplicationController
     data = {
             "channel"=>    "@#{user[:slack_name]}",
             "username"=>   "Merlin",
-            "text"=>       "#{role}",
+            "text"=>       "@#{user[:slack_name]} you're #{role}",
             "icon_emoji"=> ":#{role.downcase}:"
            }
 
