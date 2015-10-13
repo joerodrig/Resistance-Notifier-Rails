@@ -84,6 +84,10 @@ class Group extends React.Component {
   }
 }
 
+Group.propTypes = {
+  users: React.PropTypes.array.isRequired
+}
+
 
 class DetailCard extends React.Component {
   constructor(props){
@@ -133,11 +137,16 @@ class PlayerList extends React.Component {
   render() {
     return(
       <div>
-        <h1>Select Players:</h1>
+        <h4>Players:</h4>
         <ul>{this.users()}</ul>
       </div>
     )
   }
+}
+
+PlayerList.propTypes = {
+  selected: React.PropTypes.array.isRequired,
+  update:   React.PropTypes.func.isRequired
 }
 
 
@@ -161,6 +170,11 @@ class PlayerListItem extends React.Component {
   }
 }
 
+PlayerListItem.propTypes = {
+  user:       React.PropTypes.object.isRequired,
+  selectUser: React.PropTypes.func.isRequired
+}
+
 class MessageType extends React.Component {
   constructor(props) {
     super(props);
@@ -169,6 +183,7 @@ class MessageType extends React.Component {
   render() {
     return (
       <form onChange={e => this.props.messageType(e)}>
+       <h4> Notification Type: </h4>
        <label>
          <input type="radio" name="notification-option" value="slack_message" /> Slack
        </label>
