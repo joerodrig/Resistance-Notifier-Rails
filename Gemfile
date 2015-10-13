@@ -6,6 +6,8 @@ gem 'rails', '4.2.4'
 # Use sqlite3 as the database for Active Record
 gem 'pg'
 
+#slack
+gem 'slack-notifier'
 #.env
 gem 'dotenv-rails', :groups => [:development, :test]
 #cURL api
