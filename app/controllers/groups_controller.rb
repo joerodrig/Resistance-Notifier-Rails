@@ -7,36 +7,30 @@ class GroupsController < ApplicationController
     @group = params[:id]
   end
 
-  def message
-    spies          = params[:spies].to_i
-    resistance     = params[:resistance].to_i
-    roles, players = [], []
+  def web_notify
+    roles   = Group.generate_roles(params[:users].length).shuffle!
+    players = Group.selected_players(params[:users]).shuffle!
 
-    if (spies + resistance) == params[:users].length
-
-      # Add all roles to an array
-      roles = ((["Spy"] * spies) + (["Resistance"] * resistance)).shuffle
-
-      # Shuffle users
-      params[:users].shuffle!.each do |id|
-
-        # Retrieve user profile and message based off params
-        user = User.find(id)
-        players << user.name
+    if !roles.empty?
+      players.each do |user|
         send(params_message_type, *[user, roles.shift])
       end
 
-    data = {
+      data = {
             channel:    "#the-resistance",
             username:   "Merlin",
             text:       "Starting game with players: #{players.join(',')}",
             icon_emoji: ":ben:"
-           }
+      }
 
       slack_post(data)
     end
 
     redirect_to :back
+  end
+
+  def slack_notify
+
   end
 
   def slack_message(user, role)
