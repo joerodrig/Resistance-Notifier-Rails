@@ -1,3 +1,5 @@
+require 'slack-notifier'
+
 class GroupsController < ApplicationController
   def index
   end
@@ -8,6 +10,8 @@ class GroupsController < ApplicationController
   end
 
   def web_notify
+
+    #TODO: Add optional param to decide how to shuffle
     roles   = Group.generate_roles(params[:users].length).shuffle!
     players = Group.selected_players(params[:users]).shuffle!
 
@@ -29,6 +33,7 @@ class GroupsController < ApplicationController
     redirect_to :back
   end
 
+  #TODO: Start a game via slack command
   def slack_notify
 
   end
@@ -43,19 +48,11 @@ class GroupsController < ApplicationController
     slack_post(data)
   end
 
-  #TODO: Use ruby-slack-gem instead of curl to clean payload
   def slack_post(data)
-
-    # Convert hash to string
-    data = "payload={" + data.collect { |k, v| "\"#{k}\": \"#{v}\"," }.join + "}"
-
-    # Delete extra comma..
-    data[data.length-2] = ""
-
-    slack_token = ENV["slack_incoming_hook_token"]
-    slackURL    = "https://hooks.slack.com/services/#{slack_token}"
-
-    Curl.post(slackURL, data)
+    notifier            = Slack::Notifier.new ENV["slack_incoming_hook_URL"]
+    notifier.channel    = data[:channel]
+    notifier.username   = data[:username]
+    notifier.ping data[:text], icon_emoji: data[:icon_emoji]
   end
 
   def text_message(user, role)

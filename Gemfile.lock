@@ -54,7 +54,6 @@ GEM
       execjs
     coffee-script-source (1.9.1.1)
     connection_pool (2.2.0)
-    curb (0.8.8)
     debug_inspector (0.0.2)
     dotenv (2.0.1)
     dotenv-rails (2.0.1)
@@ -170,7 +169,6 @@ PLATFORMS
 DEPENDENCIES
   byebug
   coffee-rails (~> 4.1.0)
-  curb
   dotenv-rails
   jbuilder (~> 2.0)
   jquery-rails
