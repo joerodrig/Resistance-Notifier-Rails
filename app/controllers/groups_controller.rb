@@ -20,10 +20,14 @@ class GroupsController < ApplicationController
         send(params_message_type, *[user, roles.shift])
       end
 
+      playerNames = players.map do |player|
+         player.name
+      end
+
       data = {
             channel:    "#the-resistance",
             username:   "Merlin",
-            text:       "Starting game with players: #{players.join(',')}",
+            text:       "Starting game with players: #{playerNames.join(', ')}",
             icon_emoji: ":ben:"
       }
 
