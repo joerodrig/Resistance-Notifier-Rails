@@ -12,7 +12,7 @@ class GroupsController < ApplicationController
   def web_notify
 
     #TODO: Add optional param to decide how to shuffle
-    roles   = Group.generate_roles(params[:users].length).shuffle!
+    roles   = Group.generate_roles(params[:users].length)
     players = Group.selected_players(params[:users]).shuffle!
 
     if !roles.empty?
