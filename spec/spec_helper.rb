@@ -23,7 +23,10 @@ RSpec.configure do |config|
   end
 
   require "capybara/rspec"
-  
+  require "factory_girl_rails"
+  RSpec.configure do |config|
+    config.include FactoryGirl::Syntax::Methods
+  end
 
 # The settings below are suggested to provide a good initial experience
 # with RSpec, but feel free to customize to your heart's content.
