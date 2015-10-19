@@ -5,6 +5,7 @@ Rails.application.routes.draw do
     collection do
       get  '/new'        => 'groups#new'
       get  '/:id'        => 'groups#show'
+      post '/:id/slack'  => 'groups#slack_notify'
       post '/:id/submit' => 'groups#web_notify'
     end
   end

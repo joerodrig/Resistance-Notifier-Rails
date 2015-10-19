@@ -1,6 +1,8 @@
 require 'slack-notifier'
 
 class GroupsController < ApplicationController
+  skip_before_action :verify_authenticity_token
+
   def index
   end
 
@@ -39,7 +41,10 @@ class GroupsController < ApplicationController
 
   #TODO: Start a game via slack command
   def slack_notify
-
+    notifier = Slack::Notifier.new ENV["slack_slash_command_URL"]
+    notifier.channel = "@#{params[:user_name]}"
+    notifier.ping "Starting game"
+    render :nothing => true
   end
 
   def slack_message(user, role)
