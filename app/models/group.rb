@@ -15,9 +15,9 @@ class Group < ActiveRecord::Base
     end
   end
 
-  def self.selected_players playerIDs
+  def self.selected_players playerIDS
     players = []
-    playerIDs.each do |id|
+    playerIDS.each do |id|
       players << User.find(id)
     end
     players
