@@ -17,20 +17,16 @@ class GroupsController < ApplicationController
     roles   = Group.generate_roles(params[:users].length)
     players = Group.selected_players(params[:users]).shuffle!
 
-    if !roles.empty?
-      players.each do |user|
-        send(params_message_type, *[user, roles.shift])
-      end
+    unless roles.empty?
+      players.each { |user| send(params_message_type, *[user, roles.shift]) }
 
-      playerNames = players.map do |player|
-         player.name
-      end
+      playerNames = players.map(&:name)
 
       data = {
-            channel:    "#the-resistance",
-            username:   "Merlin",
-            text:       "Starting game with players: #{playerNames.join(', ')}",
-            icon_emoji: ":ben:"
+        channel:    "#the-resistance",
+        username:   "Merlin",
+        text:       "Starting game with players: #{playerNames.join(', ')}",
+        icon_emoji: ":ben:"
       }
 
       slack_post(data)
@@ -51,7 +47,7 @@ class GroupsController < ApplicationController
     data = {
       channel:    "@#{user.slack_name}",
       username:   "Merlin",
-      text:       "@#{user[:slack_name]}:  #{role}",
+      text:       "@#{user[:slack_name]}: #{role}",
       icon_emoji: ":#{role.downcase}:"
     }
     slack_post(data)
