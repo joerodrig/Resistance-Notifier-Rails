@@ -1,5 +1,6 @@
 Rails.application.routes.draw do
 
+  resources :games
   root 'groups#index'
   resources :groups do
     collection do
