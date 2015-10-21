@@ -25,11 +25,12 @@ class Group < ActiveRecord::Base
   end
 
   def increment_role_count player_data
+    user = player_data[:player]
     if player_data[:role] == "Spy"
-      player_data[:player].update(:spy_count => player_data[:player][:spy_count] + 1 )
+      user.update(:spy_count => user[:spy_count] + 1 )
     else
-      player_data[:player].update(:resistance_count => player_data[:player][:resistance_count] + 1 )
+      user.update(:resistance_count => user[:resistance_count] + 1 )
     end
-    player_data[:player].save!
+    user.save!
   end
 end
