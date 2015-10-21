@@ -15,7 +15,7 @@ class GroupsController < ApplicationController
 
     #TODO: Add optional param to decide how to shuffle
     roles   = Group.generate_roles(params[:users].length)
-    players = Group.selected_players(params[:users]).shuffle!
+    players = Group.assign_player_roles(params[:users]).shuffle!
 
     unless roles.empty?
       players.each { |user| send(params_message_type, *[user, roles.shift]) }

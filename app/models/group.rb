@@ -1,7 +1,7 @@
 class Group < ActiveRecord::Base
   has_many :users
 
-  def self.generate_roles player_count
+  def generate_roles player_count
     unless player_count < 5
       role_count = case player_count
         when 5 then  {spies: 2, resistance: 3}
@@ -15,11 +15,19 @@ class Group < ActiveRecord::Base
     end
   end
 
-  def self.selected_players playerIDS
+  def update_role_count(user, role)
+  end
+
+  def assign_player_roles playerIDS
+    roles = generate_roles playerIDS.length
+
     players = []
     playerIDS.each do |id|
-      players << User.find(id)
+      players << { player: User.find(id), role: roles.shift }
     end
+    binding.pry
     players
   end
+
+
 end
