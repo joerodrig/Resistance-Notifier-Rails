@@ -15,6 +15,12 @@ describe Group do
   it "generates proper role count based off of number of players" do
     group = create(:group)
 
+    roles = group.generate_roles(4)
+    expect(roles).to                    eq []
+
+    roles = group.generate_roles(11)
+    expect(roles).to                    eq []
+
     roles = group.generate_roles(5)
     expect(roles.count "Spy" ).to       eq 2
     expect(roles.count "Resistance").to eq 3
