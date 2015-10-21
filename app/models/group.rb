@@ -15,19 +15,21 @@ class Group < ActiveRecord::Base
     end
   end
 
-  def update_role_count(user, role)
-  end
-
   def assign_player_roles playerIDS
-    roles = generate_roles playerIDS.length
-
+    roles   = generate_roles(playerIDS.length)
     players = []
-    playerIDS.each do |id|
+    playerIDS.shuffle!.each do |id|
       players << { player: User.find(id), role: roles.shift }
     end
-    binding.pry
     players
   end
 
-
+  def increment_role_count player_data
+    if player_data[:role] == "Spy"
+      player_data[:player].update(:spy_count => player_data[:player][:spy_count] + 1 )
+    else
+      player_data[:player].update(:resistance_count => player_data[:player][:resistance_count] + 1 )
+    end
+    player_data[:player].save!
+  end
 end

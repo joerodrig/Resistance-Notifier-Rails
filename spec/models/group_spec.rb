@@ -40,7 +40,7 @@ describe Group do
     expect(roles.count "Resistance").to eq 6
   end
 
-  it "updates role count for a user when assigning a role" do
+  it "assigns players their roles" do
     group        = create(:group)
     player_one   = create(:user)
     player_two   = create(:user)
@@ -48,11 +48,23 @@ describe Group do
     player_four  = create(:user)
     player_five  = create(:user)
 
-    group.assign_player_roles([player_one.id,
-                               player_two.id,
-                               player_three.id,
-                               player_four.id,
-                               player_five.id
-                             ])
+    players = group.assign_player_roles([
+                player_one.id,
+                player_two.id,
+                player_three.id,
+                player_four.id,
+                player_five.id
+              ])
+
+    expect(players.is_a?(Array)).to be_truthy
+    expect(players.first).to include(:player, :role)
   end
+
+  it "updates a players role count" do
+    group = create(:group)
+    data = { player: create(:user), role: "Resistance" }
+    group.increment_role_count(data)
+    expect(data[:player][:resistance_count]).to eq 1
+  end
+
 end
