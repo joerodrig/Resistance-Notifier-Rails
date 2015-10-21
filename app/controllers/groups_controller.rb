@@ -12,25 +12,24 @@ class GroupsController < ApplicationController
   end
 
   def web_notify
+    @group  = Group.find(params[:id])
+    players = @group.assign_player_roles(params[:users])
 
-    #TODO: Add optional param to decide how to shuffle
-    roles   = Group.generate_roles(params[:users].length)
-    players = Group.selected_players(params[:users]).shuffle!
-
-    unless roles.empty?
-      players.each { |user| send(params_message_type, *[user, roles.shift]) }
-
-      playerNames = players.map(&:name)
-
-      data = {
-        channel:    "#the-resistance",
-        username:   "Merlin",
-        text:       "Starting game with players: #{playerNames.join(', ')}",
-        icon_emoji: ":ben:"
-      }
-
-      slack_post(data)
+    playerNames = []
+    players.each do |data|
+      send(params_message_type, *[data[:player], data[:role]])
+      playerNames << data[:player][:name]
+      @group.increment_role_count(data)
     end
+
+    data = {
+      channel:    "#the-resistance",
+      username:   "Merlin",
+      text:       "Starting game with players: #{playerNames.join(', ')}",
+      icon_emoji: ":ben:"
+    }
+    
+    slack_post(data)
 
     redirect_to :back
   end
