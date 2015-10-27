@@ -19,15 +19,19 @@ class GroupsController < ApplicationController
     if (params[:notifySpies])
       spies = []
       players.each do |data|
-        if data[:role] == "Spy"
-          spies << data[:player][:name]
-        end
+        spies << data[:player][:name] if data[:role] == "Spy"
       end
-      spy_notification = "| Spies are: #{spies.join(', ')} |"
     end
 
     players.each do |data|
-      send(params_message_type, *[data[:player], data[:role]])
+      if (params[:notifySpies] && data[:role] == "Spy")
+        otherSpies = spies.reject { |v| v == data[:player][:name] }
+        spy_notification = "| #{data[:role]} | Other Spies: #{spies.join(', ')} |"
+        send(params_message_type, *[data[:player], spy_notification])
+      else
+        send(params_message_type, *[data[:player], data[:role]])
+      end
+
       player_names << data[:player][:name]
       @group.increment_role_count(data)
     end
@@ -57,7 +61,7 @@ class GroupsController < ApplicationController
       channel:    "@#{user.slack_name}",
       username:   "Merlin",
       text:       "@#{user[:slack_name]}: #{role}",
-      icon_emoji: ":#{role.downcase}:"
+      icon_emoji: ":ben:"
     }
     slack_post(data)
   end
