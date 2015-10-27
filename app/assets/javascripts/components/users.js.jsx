@@ -21,7 +21,6 @@ class Group extends React.Component {
   }
 
   notifySpies(e){
-    debugger
     this.setState({notifySpies: e.target.checked })
   }
 
@@ -83,10 +82,13 @@ class Group extends React.Component {
                     update={e => this.updateSelectedUsers(e)}
         />
 
-        <label>
-          <input type="checkbox"
-                 onChange={(e) => this.notifySpies(e)}/> Notify Spies
-        </label>
+      <div>
+        <h4> Extra Settings: </h4>
+          <label>
+            <input type="checkbox"
+                   onChange={(e) => this.notifySpies(e)}/> Notify Spies
+          </label>
+      </div>
 
         <MessageType messageType={e => this.setMessagingOption(e)} />
 
