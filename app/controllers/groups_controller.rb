@@ -15,20 +15,30 @@ class GroupsController < ApplicationController
     @group  = Group.find(params[:id])
     players = @group.assign_player_roles(params[:users])
 
-    playerNames = []
+    player_names = []
+    if (params[:notifySpies])
+      spies = []
+      players.each do |data|
+        if data[:role] == "Spy"
+          spies << data[:player][:name]
+        end
+      end
+      spy_notification = "| Spies are: #{spies.join(', ')} |"
+    end
+
     players.each do |data|
       send(params_message_type, *[data[:player], data[:role]])
-      playerNames << data[:player][:name]
+      player_names << data[:player][:name]
       @group.increment_role_count(data)
     end
 
     data = {
       channel:    "#the-resistance",
       username:   "Merlin",
-      text:       "Starting game with players: #{playerNames.join(', ')}",
+      text:       "Starting game with players: #{player_names.join(', ')}",
       icon_emoji: ":ben:"
     }
-    
+
     slack_post(data)
 
     redirect_to :back

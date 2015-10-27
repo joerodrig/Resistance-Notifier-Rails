@@ -6,6 +6,7 @@ class Group extends React.Component {
     this.state.selectedUsers = [];
     this.state.spies         = 0;
     this.state.resistance    = 0;
+    this.state.notifySpies   = false;
   }
 
   // When a user is selected, add them to
@@ -17,6 +18,11 @@ class Group extends React.Component {
 
   setMessagingOption(e){
     this.setState({messageType: e.target.value});
+  }
+
+  notifySpies(e){
+    debugger
+    this.setState({notifySpies: e.target.checked })
   }
 
   // Calculating roles on the client
@@ -49,8 +55,7 @@ class Group extends React.Component {
   submitPlayers() {
     let data = {
       users:         this.state.selectedUsers,
-      spies:         this.state.spies,
-      resistance:    this.state.resistance,
+      notifySpies:   this.state.notifySpies,
       message_type:  this.state.messageType,
       group:         this.props.group,
     };
@@ -72,10 +77,19 @@ class Group extends React.Component {
                     spies={this.state.spies}
                     resistance={this.state.resistance}
         />
+
         <PlayerList users={this.props.users}
                     selected={this.state.selectedUsers}
-                    update={e => this.updateSelectedUsers(e)} />
+                    update={e => this.updateSelectedUsers(e)}
+        />
+
+        <label>
+          <input type="checkbox"
+                 onChange={(e) => this.notifySpies(e)}/> Notify Spies
+        </label>
+
         <MessageType messageType={e => this.setMessagingOption(e)} />
+
         <button type="submit"
                 disabled={this.state.selectedUsers.length < 5}
                 onClick={e => this.submitPlayers(e)}> Start Game</button>
