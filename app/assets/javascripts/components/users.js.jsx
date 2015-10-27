@@ -21,7 +21,7 @@ class Group extends React.Component {
   }
 
   notifySpies(e){
-    this.setState({notifySpies: e.target.checked })
+    this.setState({notifySpies: e.target.checked})
   }
 
   // Calculating roles on the client
@@ -71,7 +71,8 @@ class Group extends React.Component {
 
   render() {
     return (
-      <div>
+      <div className="col-xs-12">
+
         <DetailCard count={this.state.selectedUsers.length}
                     spies={this.state.spies}
                     resistance={this.state.resistance}
@@ -84,10 +85,12 @@ class Group extends React.Component {
 
       <div>
         <h4> Extra Settings: </h4>
+        <div className="checkbox">
           <label>
             <input type="checkbox"
                    onChange={(e) => this.notifySpies(e)}/> Notify Spies
           </label>
+        </div>
       </div>
 
         <MessageType messageType={e => this.setMessagingOption(e)} />
@@ -112,7 +115,7 @@ class DetailCard extends React.Component {
 
   render() {
     return (
-      <div>
+      <div className="text-center col-md-12">
         <h1> <u>{this.props.count}</u> players</h1>
         <h1> <span><u>{this.props.spies}</u> Spies </span>
              &nbsp;
@@ -146,7 +149,7 @@ class PlayerList extends React.Component {
   // Display selectable users within the group
   users(){
     return this.props.users.map((user, idx) => {
-      return ( <PlayerListItem user={user} selectUser={id => this.selectUser(id)} />)
+      return ( <li><PlayerListItem user={user} selectUser={id => this.selectUser(id)} /></li>)
     },this);
   }
 
@@ -177,11 +180,13 @@ class PlayerListItem extends React.Component {
 
   render() {
     return (
-      <label>
-        <input type="checkbox"
-               value={this.props.user.id}
-               onChange={(id) => this.clicked(id)} /> {this.props.user.name}
-      </label>
+      <div className="checkbox">
+        <label>
+          <input type="checkbox"
+                 value={this.props.user.id}
+                 onChange={(id) => this.clicked(id)} /> {this.props.user.name}
+        </label>
+      </div>
     )
   }
 }
@@ -200,12 +205,17 @@ class MessageType extends React.Component {
     return (
       <form onChange={e => this.props.messageType(e)}>
        <h4> Notification Type: </h4>
-       <label>
-         <input type="radio" name="notification-option" value="slack_message" /> Slack
-       </label>
-       <label>
-         <input type="radio" name="notification-option" value="text_message" /> Texting
-       </label>
+
+       <div className="radio">
+         <label>
+           <input type="radio" name="notification-option" value="slack_message" /> Slack
+         </label>
+       </div>
+       <div className="radio">
+         <label>
+           <input type="radio" name="notification-option" value="text_message" /> Texting
+         </label>
+       </div>
      </form>
     )
   }
