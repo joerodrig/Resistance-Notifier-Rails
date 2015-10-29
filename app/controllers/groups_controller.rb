@@ -39,7 +39,7 @@ class GroupsController < ApplicationController
     data = {
       channel:    "#the-resistance",
       username:   "Merlin",
-      text:       "Starting game with players: #{player_names.join(', ')}",
+      text:       "Starting game with players: #{player_names.shuffle.join(', ')}",
       icon_emoji: ":ben:"
     }
 
