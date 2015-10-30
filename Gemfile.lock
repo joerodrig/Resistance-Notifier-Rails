@@ -41,7 +41,7 @@ GEM
     autoprefixer-rails (6.0.3)
       execjs
       json
-    babel-source (5.8.25)
+    babel-source (5.8.33)
     babel-transpiler (0.7.0)
       babel-source (>= 4.0, < 6)
       execjs (~> 2.0)
@@ -167,7 +167,7 @@ GEM
     rb-inotify (0.9.5)
       ffi (>= 0.5.0)
     rdoc (4.2.0)
-    react-rails (1.3.1)
+    react-rails (1.4.1)
       babel-transpiler (>= 0.7.0)
       coffee-script-source (~> 1.8)
       connection_pool
@@ -255,7 +255,7 @@ DEPENDENCIES
   pg
   pry
   rails (= 4.2.4)
-  react-rails (~> 1.3.1)
+  react-rails (~> 1.4.1)
   rspec-rails
   sass-rails (~> 5.0)
   sdoc (~> 0.4.0)

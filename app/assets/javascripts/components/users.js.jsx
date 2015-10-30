@@ -149,7 +149,7 @@ class PlayerList extends React.Component {
   // Display selectable users within the group
   users(){
     return this.props.users.map((user, idx) => {
-      return ( <li><PlayerListItem user={user} selectUser={id => this.selectUser(id)} /></li>)
+      return ( <li key={idx}><PlayerListItem user={user} selectUser={id => this.selectUser(id)} /></li>)
     },this);
   }
 
