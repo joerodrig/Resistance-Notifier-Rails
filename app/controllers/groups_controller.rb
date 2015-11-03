@@ -26,7 +26,7 @@ class GroupsController < ApplicationController
     players.shuffle!.each do |data|
       if (params[:notifySpies] && data[:role] == "Spy")
         otherSpies = spies.reject { |v| v == data[:player][:name] }
-        spy_notification = "| #{data[:role]} | Other Spies: #{spies.join(', ')} |"
+        spy_notification = "#{spies.join(', ')}"
         send(params_message_type, *[data[:player], spy_notification])
       else
         send(params_message_type, *[data[:player], data[:role]])
