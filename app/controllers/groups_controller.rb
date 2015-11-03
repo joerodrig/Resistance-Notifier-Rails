@@ -23,7 +23,7 @@ class GroupsController < ApplicationController
       end
     end
 
-    players.each do |data|
+    players.shuffle!.each do |data|
       if (params[:notifySpies] && data[:role] == "Spy")
         otherSpies = spies.reject { |v| v == data[:player][:name] }
         spy_notification = "| #{data[:role]} | Other Spies: #{spies.join(', ')} |"
