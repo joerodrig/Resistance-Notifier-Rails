@@ -26,7 +26,7 @@ class GroupsController < ApplicationController
     players.shuffle!.each do |data|
       if (params[:notifySpies] && data[:role] == "Spy")
         otherSpies = spies.reject { |v| v == data[:player][:name] }
-        spy_notification = "#{spies.join(', ')}"
+        spy_notification = "#{otherSpies.join(', ')}"
         send(params_message_type, *[data[:player], spy_notification])
       else
         send(params_message_type, *[data[:player], data[:role]])
@@ -58,7 +58,7 @@ class GroupsController < ApplicationController
 
   def slack_message(user, role)
     data = {
-      channel:    "@#{user.slack_name}",
+      channel:    "@#{user[:slack_name]}",
       username:   "Merlin",
       text:       "@#{user[:slack_name]}: #{role}",
       icon_emoji: ":ben:"
